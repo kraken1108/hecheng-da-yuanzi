@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#276d64">
+  <title>合成大圆子</title>
+  <style>
+    :root{--ink:#163d3b;--cream:#fff9e9;--gold:#f5c85b;--jade:#75d6c4;--rose:#f4848c}
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;background:#e8f4ef;color:var(--ink);font-family:"Microsoft YaHei",system-ui,sans-serif;display:grid;place-items:center;padding:18px}
+    .shell{width:min(100%,940px);border:7px solid #fff9e9;border-radius:32px;overflow:hidden;box-shadow:0 24px 70px #154d493b;background:var(--cream)}
+    header{background:linear-gradient(115deg,#176863,#39a899);padding:20px 24px 16px;color:white;display:flex;gap:16px;align-items:center;justify-content:space-between}
+    h1{font-size:clamp(26px,5vw,44px);letter-spacing:.08em;margin:0;font-family:ui-rounded,"Microsoft YaHei",sans-serif;text-shadow:2px 3px #125450}.sub{margin:4px 0 0;font-size:14px;opacity:.93}.score{background:#fff8df;color:#9a4d3c;border-radius:16px;padding:8px 14px;font-weight:800;text-align:center;min-width:94px}.score b{display:block;font-size:22px}
+    main{padding:20px;display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:20px}.game-wrap{position:relative}.hint{margin:0 0 10px;text-align:center;font-weight:700;color:#38786e}.board{height:min(67vh,650px);min-height:455px;border:8px solid #3d8c83;border-radius:23px 23px 34px 34px;position:relative;overflow:hidden;touch-action:none;background:linear-gradient(#ffffff12,#f6ffd212),url('mint-background.jpg') center/cover}.board:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#ffffff4d 0 10%,transparent 28%,#1d756f12);pointer-events:none}.drop-line{position:absolute;top:31%;left:0;right:0;border-top:2px dashed #fff9eacc;z-index:3}.piece{position:absolute;border-radius:50%;display:grid;place-items:center;overflow:hidden;user-select:none;z-index:2;filter:drop-shadow(0 4px 2px #173c3b50);animation:pop .18s ease-out}.piece:before{content:"";position:absolute;inset:3px;border:2px solid #fff8e7b0;border-radius:inherit}.piece img{width:100%;height:100%;object-fit:cover;pointer-events:none}.piece span{position:absolute;bottom:4px;background:#fff8e7e8;border-radius:99px;padding:1px 5px;font-weight:900;font-size:11px;color:#a54855;box-shadow:0 1px 1px #0002}@keyframes pop{from{transform:scale(.55)}to{transform:scale(1)}}
+    aside{display:flex;flex-direction:column;gap:13px}.card{padding:15px;border-radius:18px;background:white;border:2px solid #d4ede7;box-shadow:0 5px 0 #d4ede7}.card h2{font-size:16px;margin:0 0 9px}.next{height:115px;border-radius:14px;overflow:hidden;background:#dff3ec;display:grid;place-items:center;position:relative}.next img{width:100%;height:100%;object-fit:cover}.next:after{content:"即将落下";position:absolute;bottom:7px;padding:3px 9px;border-radius:99px;color:#984755;background:#fff8e9e8;font-size:12px;font-weight:800}.rules{font-size:13px;line-height:1.65;margin:0}.btn{border:0;border-radius:13px;background:#f4848c;color:white;font:inherit;font-weight:800;padding:12px;cursor:pointer;box-shadow:0 4px 0 #c96470}.btn:active{translate:0 3px;box-shadow:0 1px 0 #c96470}.music-controls{display:grid;grid-template-columns:1fr auto;gap:8px}.music-controls select{min-width:0;border:2px solid #cae8e0;border-radius:11px;padding:8px;color:#28655d;background:#fafffd;font:inherit;font-size:12px}.music-controls button{border:0;border-radius:11px;background:#3b9f91;color:#fff;padding:8px 11px;font:inherit;font-weight:800;cursor:pointer}.toast{position:absolute;z-index:5;left:50%;top:12%;translate:-50% -20px;opacity:0;pointer-events:none;color:white;background:#d75d6b;border-radius:99px;padding:8px 14px;font-weight:800;transition:.25s}.toast.show{opacity:1;translate:-50% 0}
+    footer{text-align:center;color:#5c877f;font-size:12px;padding:0 20px 18px}@media(max-width:680px){body{padding:0}.shell{border-radius:0;border:0;min-height:100vh}.shell header{border-radius:0}main{grid-template-columns:1fr;padding:14px}.board{min-height:440px;height:59vh}aside{display:grid;grid-template-columns:1fr 1fr}.card:last-child{grid-column:1/-1}.next{height:86px}.hint{font-size:13px}}
+  </style>
+</head>
+<body>
+  <section class="shell">
+    <header><div><h1>合成大圆子</h1><p class="sub">把相同的圆子小团子碰在一起，看看能合成到第几级！</p></div><div class="score">分数<b id="score">0</b></div></header>
+    <main><div class="game-wrap"><p class="hint">移动鼠标或手指选择位置，点击 / 松手投放</p><div class="board" id="board" aria-label="游戏区域"><div class="drop-line"></div><div class="toast" id="toast"></div></div></div>
+      <aside><section class="card"><h2>下一颗</h2><div class="next"><img id="next" alt="下一颗圆子团子"></div></section><section class="card"><h2>背景音乐</h2><div class="music-controls"><select id="track" aria-label="选择背景音乐"><option value="xiaopingguo.ogg">小苹果</option><option value="jimo.ogg">不是因为鸡寞才想你</option></select><button id="music" type="button">▶ 播放</button></div></section><section class="card"><h2>玩法</h2><p class="rules">相同等级的团子相碰会升级。<br>合成越大，分数越高。<br>团子可以无限落下，尽情合成！</p></section><button class="btn" id="restart">重新开一局</button></aside>
+    </main><footer>圆子限定 · 轻松合成小游戏</footer>
+  </section>
+  <script>
+    const board=document.querySelector('#board'), scoreEl=document.querySelector('#score'), nextEl=document.querySelector('#next'), toast=document.querySelector('#toast'), track=document.querySelector('#track'), musicButton=document.querySelector('#music');
+    const bgm=new Audio(track.value);bgm.loop=true;bgm.volume=.45;
+    const photos=['yuanzi-1.png','yuanzi-2.png','yuanzi-3.png','yuanzi-4.png','yuanzi-5.png','yuanzi-6.png'];
+    const labels=['奶盖圆','发夹圆','白玫圆','耳机圆','亲亲圆','大圆子'];
+    const sizes=[44,57,72,89,108,130], colors=['#f8bdc4','#f4d16c','#90d7c8','#b6c8f7','#e6a7e9','#ff986d'];
+    let pieces=[], nextLevel=0, score=0, dropping=false, pointerX=.5, raf, gameOver=false;
+    const radius=l=>sizes[Math.min(l,sizes.length-1)]/2;
+    function setNext(){nextEl.src=photos[nextLevel%photos.length]}
+    function show(text){toast.textContent=text;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),900)}
+    function mk(level,x,y){const el=document.createElement('div');el.className='piece';const s=sizes[level];el.style.cssText=`width:${s}px;height:${s}px;left:${x-radius(level)}px;top:${y-radius(level)}px;background:${colors[level]}`;el.innerHTML=`<img src="${photos[level%photos.length]}" alt="${labels[level]}"><span>${labels[level]}</span>`;board.append(el);return {level,x,y,vx:0,vy:0,el,merged:false}}
+    function drop(){if(dropping||gameOver)return; dropping=true;const rect=board.getBoundingClientRect(), l=nextLevel;const x=Math.max(radius(l),Math.min(rect.width-radius(l),pointerX*rect.width));pieces.push(mk(l,x,radius(l)+6));nextLevel=Math.floor(Math.random()*Math.min(4,1+Math.floor(score/400)));setNext();setTimeout(()=>dropping=false,260)}
+    function collide(a,b){const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||.01,min=radius(a.level)+radius(b.level);if(d>=min)return false;const nx=dx/d,ny=dy/d, push=(min-d)/2;a.x-=nx*push;a.y-=ny*push;b.x+=nx*push;b.y+=ny*push;const av=a.vx*nx+a.vy*ny,bv=b.vx*nx+b.vy*ny;const impulse=(bv-av)*.45;a.vx+=impulse*nx;a.vy+=impulse*ny;b.vx-=impulse*nx;b.vy-=impulse*ny;return true}
+    function merge(a,b){if(a.merged||b.merged||a.level!==b.level)return; a.merged=b.merged=true;const level=Math.min(a.level+1,sizes.length-1), x=(a.x+b.x)/2,y=(a.y+b.y)/2;a.el.remove();b.el.remove();pieces=pieces.filter(p=>p!==a&&p!==b);pieces.push(mk(level,x,y));score+=50*(level+1);scoreEl.textContent=score;show('合成 '+labels[level]+'！')}
+    function tick(){const r=board.getBoundingClientRect(),w=r.width,h=r.height;for(const p of pieces){p.vy+=.28;p.x+=p.vx;p.y+=p.vy;p.vx*=.992;p.vy*=.992;const rad=radius(p.level);if(p.x<rad){p.x=rad;p.vx*=-.45}if(p.x>w-rad){p.x=w-rad;p.vx*=-.45}if(p.y>h-rad){p.y=h-rad;p.vy*=-.35}p.el.style.left=(p.x-rad)+'px';p.el.style.top=(p.y-rad)+'px'}for(let i=0;i<pieces.length;i++)for(let j=i+1;j<pieces.length;j++){const a=pieces[i],b=pieces[j];if(collide(a,b)&&a.level===b.level&&!a.merged&&!b.merged)merge(a,b)}raf=requestAnimationFrame(tick)}
+    board.addEventListener('pointermove',e=>{const r=board.getBoundingClientRect();pointerX=(e.clientX-r.left)/r.width});board.addEventListener('pointerup',drop);board.addEventListener('pointerleave',()=>{});document.querySelector('#restart').onclick=()=>{pieces.forEach(p=>p.el.remove());pieces=[];score=0;scoreEl.textContent=0;nextLevel=0;gameOver=false;setNext();show('新的旅程开始！')};musicButton.onclick=async()=>{if(bgm.paused){try{await bgm.play();musicButton.textContent='❚❚ 暂停'}catch{show('点一下按钮再试试播放')}}else{bgm.pause();musicButton.textContent='▶ 播放'}};track.onchange=async()=>{const wasPlaying=!bgm.paused;bgm.src=track.value;bgm.load();if(wasPlaying){await bgm.play()}show('已切换音乐')};setNext();tick();
+  </script>
+</body>
+</html>
